@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { BlogPost } from "@/components/BlogPost";
 
+// Mock data - replace with CMS or API later
 const blogPosts = [
   {
     slug: "breaking-into-tech-2024",
@@ -17,24 +18,28 @@ const blogPosts = [
   },
 ];
 
+// Update params to non-Promise version (this is better practice in App Router)
 interface PageProps {
   params: {
     slug: string;
   };
 }
 
-// `generateStaticParams()` - return plain array, no async
-export function generateStaticParams(): Array<{ params: { slug: string } }> {
+// generateStaticParams returns an array of slugs
+export function generateStaticParams(): Array<{ slug: string }> {
   return blogPosts.map((post) => ({
-    params: { slug: post.slug },
+    slug: post.slug,
   }));
 }
 
-// generateMetadata - still async, returns Metadata
+// generateMetadata now handles async/await
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const post = blogPosts.find((p) => p.slug === params.slug);
+
   if (!post) {
-    return { title: "Post Not Found - Truthy.io" };
+    return {
+      title: "Post Not Found - Truthy.io",
+    };
   }
 
   return {
@@ -43,13 +48,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-// Correct component signature — NOT async
-export default function BlogPostPage({ params }: PageProps) {
+// Component is now async
+export default async function BlogPostPage({ params }: PageProps) {
   const post = blogPosts.find((p) => p.slug === params.slug);
 
   if (!post) {
     notFound();
-    return null;
   }
 
   return <BlogPost post={post} />;
