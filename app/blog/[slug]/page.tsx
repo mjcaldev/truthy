@@ -8,14 +8,16 @@ const blogPosts = [
     slug: "breaking-into-tech-2024",
     title: "Breaking Into Tech in 2024: A Complete Roadmap",
     content: `...`, // trimmed for brevity
-    excerpt: "Navigate the evolving tech landscape with actionable strategies for career changers, from skill development to landing your first role.",
+    excerpt:
+      "Navigate the evolving tech landscape with actionable strategies for career changers, from skill development to landing your first role.",
     author: "Sarah Chen",
     date: "2024-01-15",
     readTime: "12 min read",
     category: "Career Growth",
     tags: ["Career Change", "Tech Skills", "Job Search"],
-    image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1200"
-  }
+    image:
+      "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  },
 ];
 
 interface BlogPostPageProps {
@@ -24,9 +26,12 @@ interface BlogPostPageProps {
   };
 }
 
-// ✅ FIXED: Proper return type placement
-export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  const post = blogPosts.find(p => p.slug === params.slug);
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const post = blogPosts.find((p) => p.slug === params.slug);
 
   if (!post) {
     return {
@@ -53,8 +58,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 }
 
 export default function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = blogPosts.find(p => p.slug === params.slug);
-  
+  const post = blogPosts.find((p) => p.slug === params.slug);
+
   if (!post) {
     notFound();
     return null;
