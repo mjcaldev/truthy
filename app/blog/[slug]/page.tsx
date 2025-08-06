@@ -20,17 +20,17 @@ const blogPosts = [
   },
 ];
 
-interface BlogPostPageProps {
+// Matches Next.js App Router structure
+type PageProps = {
   params: {
     slug: string;
   };
-}
+};
 
+// Proper type for generateMetadata props
 export async function generateMetadata({
   params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
+}: PageProps): Promise<Metadata> {
   const post = blogPosts.find((p) => p.slug === params.slug);
 
   if (!post) {
@@ -57,7 +57,7 @@ export async function generateMetadata({
   };
 }
 
-export default function BlogPostPage({ params }: BlogPostPageProps) {
+export default function BlogPostPage({ params }: PageProps) {
   const post = blogPosts.find((p) => p.slug === params.slug);
 
   if (!post) {
@@ -68,6 +68,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
   return <BlogPost post={post} />;
 }
 
+// Used for static generation
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   return blogPosts.map((post) => ({
     slug: post.slug,
