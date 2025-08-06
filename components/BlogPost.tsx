@@ -1,11 +1,21 @@
 "use client";
 
 import { motion } from "framer-motion";
+import type { Components } from "react-markdown";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Calendar, Clock, ArrowLeft, Share2, BookOpen, User } from "lucide-react";
+import { markdownComponents } from "@/components/MarkdownComponents";
+import {
+  Calendar,
+  Clock,
+  ArrowLeft,
+  Share2,
+  BookOpen,
+  User,
+} from "lucide-react";
 import { Navigation } from "@/components/Navigation";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -30,7 +40,7 @@ export function BlogPost({ post }: BlogPostProps) {
   return (
     <main className="min-h-screen bg-background">
       <Navigation />
-      
+
       {/* Hero Section */}
       <section className="pt-24 pb-8 px-4">
         <div className="max-w-4xl mx-auto">
@@ -39,8 +49,8 @@ export function BlogPost({ post }: BlogPostProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Link 
-              href="/blog" 
+            <Link
+              href="/blog"
               className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors mb-8"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -65,18 +75,20 @@ export function BlogPost({ post }: BlogPostProps) {
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Calendar className="w-4 h-4" />
-                  <span>{new Date(post.date).toLocaleDateString('en-US', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  })}</span>
+                  <span>
+                    {new Date(post.date).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Clock className="w-4 h-4" />
                   <span>{post.readTime}</span>
                 </div>
               </div>
-              
+
               <Button variant="outline" size="sm">
                 <Share2 className="w-4 h-4 mr-2" />
                 Share Article
@@ -97,8 +109,8 @@ export function BlogPost({ post }: BlogPostProps) {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="relative h-[400px] rounded-lg overflow-hidden"
           >
-            <img 
-              src={post.image} 
+            <img
+              src={post.image}
               alt={post.title}
               className="w-full h-full object-cover"
             />
@@ -117,33 +129,7 @@ export function BlogPost({ post }: BlogPostProps) {
             className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-foreground prose-strong:text-foreground prose-li:text-foreground prose-blockquote:text-muted-foreground prose-blockquote:border-l-primary"
           >
             <ReactMarkdown
-              components={{
-                code({node, inline, className, children, ...props}) {
-                  const match = /language-(\w+)/.exec(className || '');
-                  return !inline && match ? (
-                    <SyntaxHighlighter
-                      style={oneDark}
-                      language={match[1]}
-                      PreTag="div"
-                      className="rounded-lg"
-                      {...props}
-                    >
-                      {String(children).replace(/\n$/, '')}
-                    </SyntaxHighlighter>
-                  ) : (
-                    <code className={className} {...props}>
-                      {children}
-                    </code>
-                  )
-                },
-                blockquote({children}) {
-                  return (
-                    <blockquote className="border-l-4 border-primary/50 pl-6 italic text-muted-foreground">
-                      {children}
-                    </blockquote>
-                  )
-                }
-              }}
+              components={markdownComponents}
             >
               {post.content}
             </ReactMarkdown>
@@ -158,7 +144,7 @@ export function BlogPost({ post }: BlogPostProps) {
           >
             <h3 className="text-lg font-semibold mb-4">Tags</h3>
             <div className="flex flex-wrap gap-2">
-              {post.tags.map(tag => (
+              {post.tags.map((tag) => (
                 <Badge key={tag} variant="outline">
                   {tag}
                 </Badge>
@@ -177,11 +163,10 @@ export function BlogPost({ post }: BlogPostProps) {
               <BookOpen className="w-12 h-12 mx-auto mb-4 text-primary" />
               <h3 className="text-2xl font-bold mb-4">Enjoyed this article?</h3>
               <p className="text-muted-foreground mb-6">
-                Get more career insights and tech trends delivered to your inbox weekly.
+                Get more career insights and tech trends delivered to your inbox
+                weekly.
               </p>
-              <Button size="lg">
-                Subscribe to Newsletter
-              </Button>
+              <Button size="lg">Subscribe to Newsletter</Button>
             </div>
           </motion.div>
         </div>
