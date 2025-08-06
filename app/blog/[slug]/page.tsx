@@ -69,8 +69,10 @@ export default function BlogPostPage({ params }: PageProps) {
   return <BlogPost post={post} />;
 }
 
-export async function generateStaticParams(): Promise<{ slug: string }[]> {
+export async function generateStaticParams(): Promise<
+  Array<{ params: { slug: string } }>
+> {
   return blogPosts.map((post) => ({
-    slug: post.slug,
+    params: { slug: post.slug },
   }));
 }
