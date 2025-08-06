@@ -26,9 +26,9 @@ interface PageProps {
 }
 
 // generateStaticParams returns an array of params objects
-export function generateStaticParams(): Array<{ params: { slug: string } }> {
+export function generateStaticParams() {
   return blogPosts.map((post) => ({
-    params: { slug: post.slug },
+    slug: post.slug,
   }));
 }
 
