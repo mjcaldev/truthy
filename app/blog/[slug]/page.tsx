@@ -18,23 +18,24 @@ const blogPosts = [
   },
 ];
 
-// Update params to non-Promise version (this is better practice in App Router)
+// Next.js 15 requires params to be a Promise
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
-// generateStaticParams returns an array of slugs
-export function generateStaticParams(): Array<{ slug: string }> {
+// generateStaticParams returns an array of params objects
+export function generateStaticParams(): Array<{ params: { slug: string } }> {
   return blogPosts.map((post) => ({
-    slug: post.slug,
+    params: { slug: post.slug },
   }));
 }
 
-// generateMetadata now handles async/await
+// generateMetadata must await params in Next.js 15
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const post = blogPosts.find((p) => p.slug === params.slug);
+  const { slug } = await params;
+  const post = blogPosts.find((p) => p.slug === slug);
 
   if (!post) {
     return {
@@ -48,9 +49,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-// Component is now async
+// Component must be async and await params in Next.js 15
 export default async function BlogPostPage({ params }: PageProps) {
-  const post = blogPosts.find((p) => p.slug === params.slug);
+  const { slug } = await params;
+  const post = blogPosts.find((p) => p.slug === slug);
 
   if (!post) {
     notFound();
